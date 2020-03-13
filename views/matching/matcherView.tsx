@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, View, PanResponder, Dimensions, Animated, UIManager, LayoutAnimation } from 'react-native';
 import { Button, Card } from 'react-native-elements';
 import { LinearGradient } from 'expo-linear-gradient';
-import { profiles } from '../../App'
 import CardMatch from '../../components/Card';
+import { Profile } from '../../Models';
 
 interface Props {
   navigation: any
@@ -19,6 +19,81 @@ const SCREEN_WIDTH = Dimensions.get('window').width;
 const CARD_WIDTH = SCREEN_WIDTH * 0.8;
 const SWIPE_THRESHOLD = 0.30 * SCREEN_WIDTH;
 const SWIPE_OUT_DURATION = 250;
+
+const profiles: Profile[] = [
+  {
+    id: "1",
+    name: "Caroline",
+    age: 24,
+    profile: require("../../assets/profiles/1.jpg"),
+  },
+  {
+    id: "2",
+    name: "Jack",
+    age: 30,
+    profile: require("../../assets/profiles/2.jpg"),
+  },
+  {
+    id: "3",
+    name: "Anet",
+    age: 21,
+    profile: require("../../assets/profiles/3.jpg"),
+  },
+  {
+    id: "4",
+    name: "John",
+    age: 28,
+    profile: require("../../assets/profiles/4.jpg"),
+  },
+  {
+    id: "5",
+    name: "Agrid",
+    age: 18,
+    profile: require("../../assets/profiles/5.jpg"),
+  },
+  {
+    id: "6",
+    name: "Cha5",
+    age: 28,
+    profile: require("../../assets/profiles/6.jpg"),
+  },
+  {
+    id: "7",
+    name: "Sebastien",
+    age: 38,
+    profile: require("../../assets/profiles/7.jpg"),
+  },
+  {
+    id: "8",
+    name: "Robert",
+    age: 24,
+    profile: require("../../assets/profiles/8.jpg"),
+  },
+  {
+    id: "9",
+    name: "Patrick",
+    age: 24,
+    profile: require("../../assets/profiles/9.jpg"),
+  },
+  {
+    id: "10",
+    name: "Patrick",
+    age: 24,
+    profile: require("../../assets/profiles/10.jpg"),
+  },
+  {
+    id: "11",
+    name: "Patrick",
+    age: 24,
+    profile: require("../../assets/profiles/11.jpg"),
+  },
+  {
+    id: "12",
+    name: "Patrick",
+    age: 24,
+    profile: require("../../assets/profiles/12.jpg"),
+  },
+];
 
 export default class MatcherView extends Component<Props, State> {
 

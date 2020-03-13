@@ -81,5 +81,4 @@ const AppNavigator = createStackNavigator(
   }
 );
 
-export const SignInContainer = createAppContainer(AppNavigator);
-
+export const SignInContainer = createAppContainer(DrawerNavigator);
