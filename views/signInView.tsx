@@ -26,14 +26,23 @@ export default class SignIn extends Component<Props> {
 
   login = () => {
     this.setState({ isLoading: true });
-    const payload = JSON.stringify({
+    const payload = {
       email: this.state.email,
       password: this.state.password,
-    })
-    // this.props.navigation.navigate('LogIn'); // DELETE WHEN LOGIN OPERATIONNAL
+    };
+
     console.log(this.state.email, this.state.password, payload)
 
-    Helpers.requestService('login', 'POST', payload).then(res => console.log(res));
+    Helpers.requestService('login', 'POST', payload).then((res: any) => {
+      if (res.token) {
+        alert('Sucess ! you will be logged in !');
+        Helpers.storeDataLocally('userAccountToken', res.token).catch((err) => console.log(err));
+        this.props.navigation.navigate('LogIn');
+      }
+      else {
+        alert('Something went wrong...')
+      }
+    });
   }
 
   componentWillMount() {

@@ -4,6 +4,8 @@ import { Button, Card } from 'react-native-elements';
 import { LinearGradient } from 'expo-linear-gradient';
 import CardMatch from '../../components/Card';
 import { Profile } from '../../Models';
+import * as Helpers from '../../helpers';
+import { reject } from 'lodash';
 
 interface Props {
   navigation: any
@@ -19,6 +21,8 @@ const SCREEN_WIDTH = Dimensions.get('window').width;
 const CARD_WIDTH = SCREEN_WIDTH * 0.8;
 const SWIPE_THRESHOLD = 0.30 * SCREEN_WIDTH;
 const SWIPE_OUT_DURATION = 250;
+
+let listOfMatchs;
 
 const profiles: Profile[] = [
   {
@@ -102,7 +106,33 @@ export default class MatcherView extends Component<Props, State> {
 
     constructor(props) {
         super(props);
+        console.log("before payload");
+        
+        let test;
 
+        listOfMatchs = new Promise((resolve, reject) => {
+          fetch('https://alsatoju-dev.herokuapp.com/' + 'matchings/1', {
+            method: 'GET',
+          }).then((response) => {
+            return response.json()
+          }).then((responseJson) => {
+            console.log(responseJson)
+            console.log("HERE")
+            resolve(responseJson)
+          }).catch((error) => {
+            reject(error)
+          })
+        })
+
+        listOfMatchs.array.forEach(item => {
+          console.log(item)
+          if(item.UserTwo.id =! '1')
+            test.append([item.UserTwo, item.id])
+          else
+            test.append([item.UserOne, item.id])
+        });
+        
+        
         this.state = {
             passedProfile: 0,
             likedProfile: 0,
@@ -136,6 +166,7 @@ export default class MatcherView extends Component<Props, State> {
   }
 
   forceSwipe(direction) {
+    console.log(listOfMatchs);
     const x = direction === 'right' ? SCREEN_WIDTH : -SCREEN_WIDTH;
     Animated.timing(this.position, {
       toValue: { x, y: 0 },
@@ -145,8 +176,9 @@ export default class MatcherView extends Component<Props, State> {
 
   onSwipeComplete(direction) {
     const profile = profiles[this.state.index];
+    let matchId = 1;
 
-    direction === 'right' ? this.handleLikedProfile(profile) : this.handlePassedProfile(profile);
+    direction === 'right' ? this.handleLikedProfile(profile, matchId) : this.handlePassedProfile(profile);
     this.position.setValue({ x: 0, y: 0 });
 
     // Spring Animation on Profile Deck
@@ -161,9 +193,21 @@ export default class MatcherView extends Component<Props, State> {
     this.setState({ index: this.state.index + 1 });
   }
 
-  handleLikedProfile = (profile) => {
+  handleLikedProfile = (profile, matchId) => {
+    const payload = {
+      id: profile.id,
+      response: true,
+    };
+    Helpers.requestService('matchings/' + matchId, 'PATCH', payload).then((res: any) => {
+      if (res.ok) {
+        alert('Sucess ! you liked it !');
+      }
+      else {
+        alert('Something went wrong')
+      }
+    });
     this.setState(({ likedProfile }) => ({
-        likedProfile: likedProfile + 1
+      likedProfile: likedProfile + 1
     }));
   };
 
@@ -264,6 +308,11 @@ export default class MatcherView extends Component<Props, State> {
                   <Text style={{ color: 'yellow' }}>Index: {this.state.index}</Text>
                   <Text style={{ color: 'green' }}>Passed: {this.state.passedProfile}</Text>
                   <Text style={{ color: 'blue' }}>Like: {this.state.likedProfile}</Text>
+              </View>
+              <View>
+                <Text>
+                  listOfMatchs
+                </Text>
               </View>
               <View style={{width: '80%'}}>
                   {

@@ -26,7 +26,6 @@ export const getDataLocally = async (storage_key: string) => {
 
 export function requestService(endpoint, method, body = {}, token = null) {
   let BaseUrl = 'https://alsatoju-dev.herokuapp.com/'
-
   if (token) {
     return new Promise((resolve, reject) => {
       fetch(BaseUrl + endpoint, {
@@ -53,8 +52,9 @@ export function requestService(endpoint, method, body = {}, token = null) {
           'Content-Type': 'application/json',
         },
       }).then((response) => {
-        resolve(response.json())
+        return(response.json())
       }).then((responseJson) => {
+        console.log("HIBOU MAGIQUE")
         resolve(responseJson)
       }).catch((error) => {
         reject(error)
