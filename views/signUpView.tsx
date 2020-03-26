@@ -3,17 +3,20 @@ import { StyleSheet, Text, View, Image } from 'react-native';
 import { Button, Input } from 'react-native-elements';
 import { LinearGradient } from 'expo-linear-gradient';
 
+import * as Helpers from '../helpers';
+
+
 interface Props {
   navigation: any
 }
 export default class SignUp extends Component<Props> {
 
   state = {
-    pseudonyme: 'Jupi',
-    email: 'ReactJuTestRegister@gmail.com',
-    emailConf: 'ReactJuTestRegister@gmail.com',
-    password: 'testtest',
-    passwordConf: 'testtest',
+    pseudonyme: '',
+    email: '',
+    emailConf: '',
+    password: '',
+    passwordConf: '',
     redirectToReferrer: false,
     error: '',
   }
@@ -29,28 +32,21 @@ export default class SignUp extends Component<Props> {
       && this.state.password
       && this.state.password == this.state.passwordConf
       && this.state.email == this.state.emailConf) {
-      fetch('https://alsatoju-dev.herokuapp.com/app_users', {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: this.state.email,
-          password: this.state.password,
-        }),
+      const payload = {
+        email: this.state.email,
+        password: this.state.password,
+      }
+      Helpers.requestService('app_users', 'POST', payload).then((res: any) => {
+
+        if (res.id) {
+          alert('Sucess ! you will be logged in !');
+          this.props.navigation.navigate('LogIn');
+        }
+        else {
+          !res.errors[0].message ? alert('Something went wrong...') : alert(res.errors[0].message);
+        }
       })
-        .then((res: any) => {
-          console.log(res);
-          if (res.id) {
-            alert('Sucess ! you will be logged in !');
-            this.props.navigation.navigate('LogIn');
-          }
-          else {
-            alert('Something went wrong...')
-          }
-        })
-        .catch((err) => { console.log(err) });
+        .catch((err) => { });
     }
   }
 
@@ -65,7 +61,7 @@ export default class SignUp extends Component<Props> {
           style={{ height: '100%', width: '100%', alignItems: 'center', justifyContent: 'space-around' }}>
 
           <Text style={{ position: 'absolute', color: 'black', fontFamily: 'NotoSans-Bold', fontSize: 20, top: '10%' }}>There's always time to
-              Catch
+          Catch
                     up!</Text>
 
           <View style={{ width: '80%', height: 400, justifyContent: 'space-between' }}>

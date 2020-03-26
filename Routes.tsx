@@ -60,7 +60,7 @@ const DrawerNavigator = createDrawerNavigator(
     // WheelOfFortune: { screen: WheelOfFortune},
   },
   {
-    initialRouteName: 'Settings',
+    initialRouteName: 'Games',
     drawerType: 'back',
     navigationOptions: {
       headerLeft: withNavigation(({ navigation }) => (<Text onPress={() => { navigation.toggleDrawer() }} style={{ color: 'black' }}>Menu</Text>)),

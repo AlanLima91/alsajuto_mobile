@@ -31,8 +31,6 @@ export default class SignIn extends Component<Props> {
       password: this.state.password,
     };
 
-    console.log(this.state.email, this.state.password, payload)
-
     Helpers.requestService('login', 'POST', payload).then((res: any) => {
       if (res.token) {
         alert('Sucess ! you will be logged in !');

@@ -217,6 +217,7 @@ export default class MatcherView extends Component<Props, State> {
     }));
   };
 
+
   resetPosition() {
     Animated.spring(this.position, {
       toValue: { x: 0, y: 0 }
