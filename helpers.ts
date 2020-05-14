@@ -10,8 +10,9 @@ export const storeDataLocally = async (storage_key: string, valueToStore: string
 }
 
 export const getDataLocally = async (storage_key: string) => {
+  let value = null;
   try {
-    const value = await AsyncStorage.getItem('@' + storage_key)
+    value = await AsyncStorage.getItem('@' + storage_key)
     if (value !== null) {
       if (storage_key == 'userAccountToken') {
         console.log("token number : ", value);
@@ -22,20 +23,35 @@ export const getDataLocally = async (storage_key: string) => {
     // error reading value
     throw new Error(e);
   }
+  return value;
 }
 
-export function requestService(endpoint, method, body = {}, token = null) {
+export function requestService(endpoint, method, body = null) {
   let BaseUrl = 'https://alsatoju-dev.herokuapp.com/'
+  return getDataLocally('userAccountToken').then((token) => {
   if (token) {
     return new Promise((resolve, reject) => {
-      fetch(BaseUrl + endpoint, {
-        method: method,
-        body: JSON.stringify(body),
-        headers: {
-          Authorization: "Bearer " + token,
-          'Content-Type': 'application/json',
-        },
-      }).then((response) => {
+      var myParams = null;
+      if(body != null){
+        myParams = {
+          method: method,
+          body: JSON.stringify(body),
+          headers: {
+            Authorization: "Bearer " + token,
+            'Content-Type': 'application/json',
+          },
+        }
+      } else {
+       myParams = {
+          method: method,
+          headers: {
+            Authorization: "Bearer " + token,
+            'Content-Type': 'application/json',
+          },
+        };
+      }
+
+      fetch(BaseUrl + endpoint, myParams).then((response) => {
         return response.json()
       }).then((responseJson) => {
         resolve(responseJson)
@@ -54,11 +70,10 @@ export function requestService(endpoint, method, body = {}, token = null) {
       }).then((response) => {
         return(response.json())
       }).then((responseJson) => {
-        console.log("HIBOU MAGIQUE")
         resolve(responseJson)
       }).catch((error) => {
         reject(error)
       })
     })
-  }
+  }}).catch((error) => {console.log(error);});
 }

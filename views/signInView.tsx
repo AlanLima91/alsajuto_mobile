@@ -44,12 +44,13 @@ export default class SignIn extends Component<Props> {
   }
 
   componentWillMount() {
-    Helpers.getDataLocally('userAccountToken').then((res) => {
+    //check if token is valid
+    //Helpers.getDataLocally('userAccountToken').then((res) => {
       // if(tokenisvalid) {
       //   this.props.navigation.navigate('LogIn');
       // }
-      console.log('response from local store : ', res);
-    }).catch(err => console.log(err));
+     // console.log('response from local store : ', res);
+    //}).catch(err => console.log(err));
   }
 
   render() {
